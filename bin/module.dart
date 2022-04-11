@@ -1,53 +1,52 @@
-//Prints the map/array with the tic tac toe's grid
-void print_map(List map) {
-  var line_count = 0;
-  print('');
-  for (var i = 0; i < 5; i++) {
-    if ((i + 1) % 2 != 0) {
-      print(
-          '\u001b[34m ${map[line_count][0]} | ${map[line_count][1]} | ${map[line_count][2]} ');
-      line_count += 1;
-    } else {
-      print('\u001b[34m---|---|---');
-    }
-  }
-  print('');
-}
+//Prints the board/array with the tic tac toe's grid
 
-// Receives an 1 - 9 number as input and returns a map's coordinate
+void printBoard(List board) {}
+
+// Receives an 1 - 9 number as input and returns a board's coordinate
 // ignore: missing_return
-List num_to_xy(chose_num) {
-  if (chose_num == 1) {
-    return [0, 0];
-  } else if (chose_num == 2) {
-    return [0, 1];
-  } else if (chose_num == 3) {
-    return [0, 2];
-  } else if (chose_num == 4) {
-    return [1, 0];
-  } else if (chose_num == 5) {
-    return [1, 1];
-  } else if (chose_num == 6) {
-    return [1, 2];
-  } else if (chose_num == 7) {
-    return [2, 0];
-  } else if (chose_num == 8) {
-    return [2, 1];
-  } else if (chose_num == 9) {
-    return [2, 2];
+List numToCoordinate(chosenNum) {
+  switch (chosenNum) {
+    case 1:
+      return [0, 0];
+      break;
+    case 2:
+      return [0, 1];
+      break;
+    case 3:
+      return [0, 2];
+      break;
+    case 4:
+      return [1, 0];
+      break;
+    case 5:
+      return [1, 1];
+      break;
+    case 6:
+      return [1, 2];
+      break;
+    case 7:
+      return [2, 0];
+      break;
+    case 8:
+      return [2, 1];
+      break;
+    case 9:
+      return [2, 2];
+      break;
   }
 }
 
-//Writes the player's symbol on the chose map's coordinate
-List<List> write_map(List<List<String>> map, String symbol, List coordinate) {
-  map[coordinate[0]][coordinate[1]] = symbol;
-  return map;
+//Writes the player's symbol on the chose board's coordinate
+List<List> writePlayersSymbolAtField(
+    {List<List<String>> board, List coordinate, String symbol}) {
+  board[coordinate[0]][coordinate[1]] = symbol;
+  return board;
 }
 
 //Checks if the selected coordinate is actually available
-bool check_availability(map, coordinate) {
-  if (map[coordinate[0]][coordinate[1]] == 'X' ||
-      map[coordinate[0]][coordinate[1]] == 'O') {
+bool checkAvailability(List<List<String>> board, List coordinate) {
+  if (board[coordinate[0]][coordinate[1]] == '\u001b[32mX' ||
+      board[coordinate[0]][coordinate[1]] == '\u001b[33mO') {
     return false;
   } else {
     return true;
@@ -56,16 +55,16 @@ bool check_availability(map, coordinate) {
 
 //Checks if the player's input is valid
 // ignore: missing_return
-bool check_validity(player_input) {
-  if (player_input is! int) {
+bool checkValidity(playerInput) {
+  if (playerInput is! int) {
     return false;
-  } else if ((player_input < 1) | (player_input > 9)) {
+  } else if ((playerInput < 1) | (playerInput > 9)) {
     return false;
   }
 }
 
 //Change turns
-int change_turn(int turn) {
+int changeTurn(int turn) {
   if (turn == 1) {
     return 0;
   } else {
@@ -74,29 +73,29 @@ int change_turn(int turn) {
 }
 
 //Checks if the player which is actually playing won after his turn
-bool horizontal_check(map, flag) {
-  for (var i = 0; i < 3; i++) {
-    if ((map[i][0] == map[i][1]) & (map[i][1] == map[i][2])) {
+bool horizontalCheck(board, flag) {
+  for (int i = 0; i < 3; i++) {
+    if ((board[i][0] == board[i][1]) & (board[i][1] == board[i][2])) {
       flag = false;
     }
   }
   return flag;
 }
 
-bool vertical_check(map, flag) {
-  for (var i = 0; i < 3; i++) {
-    if ((map[0][i] == map[1][i]) & (map[1][i] == map[2][i])) {
+bool verticalCheck(board, flag) {
+  for (int i = 0; i < 3; i++) {
+    if ((board[0][i] == board[1][i]) & (board[1][i] == board[2][i])) {
       flag = false;
     }
   }
   return flag;
 }
 
-bool diagonal_check(map, flag) {
-  if ((map[0][0] == map[1][1]) & (map[1][1] == map[2][2])) {
+bool diagonalCheck(board, flag) {
+  if ((board[0][0] == board[1][1]) & (board[1][1] == board[2][2])) {
     flag = false;
     return flag;
-  } else if ((map[0][2] == map[1][1]) & (map[1][1] == map[2][0])) {
+  } else if ((board[0][2] == board[1][1]) & (board[1][1] == board[2][0])) {
     flag = false;
     return flag;
   } else {
@@ -105,18 +104,14 @@ bool diagonal_check(map, flag) {
 }
 
 // ignore: missing_return
-bool check_tie(map, flag) {
-  var countFreeHouses = 0;
-  for (var i = 0; i < 3; i++) {
-    for (var j = 0; j < 3; j++) {
-      if ((map[i][j] != 'X') & (map[i][j] != 'O')) {
+bool checkTie(board, flag) {
+  int countFreeHouses = 0;
+  for (int i = 0; i < 3; i++) {
+    for (int j = 0; j < 3; j++) {
+      if ((board[i][j] != '\u001b[32mX') & (board[i][j] != '\u001b[33mO')) {
         countFreeHouses += 1;
       }
     }
   }
-  if ((countFreeHouses == 0) & (flag == true)) {
-    return true;
-  } else {
-    return false;
-  }
+  return ((countFreeHouses == 0) & (flag));
 }

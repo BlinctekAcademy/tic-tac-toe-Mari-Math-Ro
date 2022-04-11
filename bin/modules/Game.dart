@@ -8,11 +8,12 @@ class Game {
 
   Game();
 
+  void start() {}
+
   void play(field) {}
 
-  void quit(flag){
+  bool quit() {
     print('\u001b[37mO jogo foi encerrado!');
-    flag = false;
-    return;
+    return false;
   }
 }
