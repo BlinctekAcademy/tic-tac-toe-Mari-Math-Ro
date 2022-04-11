@@ -1,109 +1,97 @@
 import 'module.dart' as module;
 import 'dart:io';
-import './modules/Game.dart' show Game;
-import './modules/Board.dart';
 
-Game game = Game();
-Board board = game.board;
+//Map
+List<List<String>> map = [
+  ['1', '2', '3'],
+  ['4', '5', '6'],
+  ['7', '8', '9'],
+];
 
-List<String> players = ['\u001b[32mX', '\u001b[33mO'];
+const playerOne = 'X';
+const playerTwo = 'O';
+var players = [playerOne, playerTwo];
 int turn = 0;
-List chosenCoordinate = [];
-int playerInput;
+var choseCoordinate = [];
+var playerInput = 0;
 bool flag = true;
-bool isAvailable = true;
-bool isValid = true;
+bool ifAvailable = true;
+bool ifValid = true;
+String finalMessage = '\n\u001b[32mO jogador ${players[turn]} ganhou!';
 
 void main(List<String> arguments) {
-  //fluid interface
   print('\x1B[2J\x1B[0;0H');
+  while (flag == true) {
+    module.print_map(map);
 
-  while (flag) {
-    board.render(board.representation);
-
-    stdout.write(
-        '\u001b[37mJogador ${players[turn]}\u001b[37m, faça sua jogada (Pressione 0 para terminar o jogo): ');
+    stdout.write('\u001b[32mJogador ${players[turn]}, faça sua jogada: ');
     playerInput = int.tryParse(stdin.readLineSync());
 
-    isValid = module.checkValidity(playerInput);
-
-    if(playerInput == 0){
-      game.quit(flag);
-    }
+    ifValid = module.check_validity(playerInput);
 
     //LEMBRETE: TRANSFORMAR EM FUNÇÃO
-    if (isValid == false) {
-      while (isValid == false) {
+    if (ifValid == false) {
+      while (ifValid == false) {
         print('');
-        stdout.write('\u001b[31mEscolha um valor válido: ');
+        stdout.write('\u001b[32mEscolha um valor válido: ');
         playerInput = int.tryParse(stdin.readLineSync());
-        isValid = module.checkValidity(playerInput);
+        ifValid = module.check_validity(playerInput);
       }
     }
 
-    chosenCoordinate = module.numToCoordinate(playerInput);
+    choseCoordinate = module.num_to_xy(playerInput);
 
-    isAvailable =
-        module.checkAvailability(board.representation, chosenCoordinate);
+    ifAvailable = module.check_availability(map, choseCoordinate);
 
-    if (isAvailable == false) {
-      while (isAvailable == false) {
+    if (ifAvailable == false) {
+      while (ifAvailable == false) {
         print(' ');
-        stdout.write('\u001b[31mEscolha uma casa livre: ');
+        stdout.write('\u001b[32mEscolha uma casa livre: ');
         playerInput = int.tryParse(stdin.readLineSync());
-        isValid = module.checkValidity(playerInput);
+        ifValid = module.check_validity(playerInput);
 
         //CHAMAR FUNÇÃO A SER CRIADA
-        if (isValid == false) {
-          while (isValid == false) {
+        if (ifValid == false) {
+          while (ifValid == false) {
             print('');
-            stdout.write('\u001b[31mEscolha um valor válido: ');
+            stdout.write('\u001b[32mEscolha um valor válido: ');
             playerInput = int.tryParse(stdin.readLineSync());
-            isValid = module.checkValidity(playerInput);
+            ifValid = module.check_validity(playerInput);
           }
         }
 
-        chosenCoordinate = module.numToCoordinate(playerInput);
-        isAvailable =
-            module.checkAvailability(board.representation, chosenCoordinate);
+        //Segue o código
+        choseCoordinate = module.num_to_xy(playerInput);
+        ifAvailable = module.check_availability(map, choseCoordinate);
       }
     }
 
-    module.writePlayersSymbolAtField(
-        board: board.representation,
-        coordinate: chosenCoordinate,
-        symbol: '${players[turn]}');
+    module.write_map(map, players[turn], choseCoordinate);
 
-    if (flag) {
-      flag = module.horizontalCheck(board.representation, flag);
+    if (flag == true) {
+      flag = module.horizontal_check(map, flag);
     }
 
-    if (flag) {
-      flag = module.verticalCheck(board.representation, flag);
+    if (flag == true) {
+      flag = module.vertical_check(map, flag);
     }
 
-    if (flag) {
-      flag = module.diagonalCheck(board.representation, flag);
+    if (flag == true) {
+      flag = module.diagonal_check(map, flag);
     }
 
-    if (module.checkTie(board.representation, flag)) {
-      print('\n\u001b[33mO jogo empatou!');
+    if (module.check_tie(map, flag) == true) {
+      finalMessage = '\n\u001b[32mO jogo empatou!';
       flag = false;
-      return;
     }
 
-    if (flag) {
-      turn = module.changeTurn(turn);
+    if (flag == true) {
+      turn = module.change_turn(turn);
     }
 
-    //fluid interface
     print('\x1B[2J\x1B[0;0H');
   }
 
-  board.render(board.representation);
-  if (players[turn] == '\u001b[32mX') {
-    print('\n\u001b[37mO jogador ${players[turn]} \u001b[37mganhou!');
-    return;
-  }
-  print('\n\u001b[37mO jogador ${players[turn]} \u001b[37mganhou!');
+  module.print_map(map);
+  print(finalMessage);
 }
