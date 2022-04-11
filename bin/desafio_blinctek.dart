@@ -22,10 +22,14 @@ void main(List<String> arguments) {
     board.render(board.representation);
 
     stdout.write(
-        '\u001b[37mJogador ${players[turn]}\u001b[37m, faça sua jogada: ');
+        '\u001b[37mJogador ${players[turn]}\u001b[37m, faça sua jogada (Pressione 0 para terminar o jogo): ');
     playerInput = int.tryParse(stdin.readLineSync());
 
     isValid = module.checkValidity(playerInput);
+
+    if(playerInput == 0){
+      game.quit(flag);
+    }
 
     //LEMBRETE: TRANSFORMAR EM FUNÇÃO
     if (isValid == false) {

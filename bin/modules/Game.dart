@@ -9,4 +9,10 @@ class Game {
   Game();
 
   void play(field) {}
+
+  void quit(flag){
+    print('\u001b[37mO jogo foi encerrado!');
+    flag = false;
+    return;
+  }
 }
