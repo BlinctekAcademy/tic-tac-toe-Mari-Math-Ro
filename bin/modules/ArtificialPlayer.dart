@@ -1,6 +1,9 @@
-class ArtificialPlayer {
-  List<List<String>> board;
+import 'Player.dart' show Player;
+
+class ArtificialPlayer extends Player {
   List<List<int>> scoreBoard;
 
-  ArtificialPlayer();
+  ArtificialPlayer(String _value, int _score) : super(_value, _score);
+
+  calculate(List<List<String>> board) {}
 }
