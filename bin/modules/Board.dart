@@ -155,7 +155,7 @@ class Board {
     return true;
   }
 
-  bool checkTie(flag) {
+  bool checkTie() {
     int countFreeHouses = 0;
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 3; j++) {
@@ -165,6 +165,6 @@ class Board {
         }
       }
     }
-    return ((countFreeHouses == 0) & (flag));
+    return (countFreeHouses == 0);
   }
 }

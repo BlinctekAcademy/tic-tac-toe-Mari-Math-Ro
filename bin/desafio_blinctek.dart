@@ -80,10 +80,9 @@ void main(List<String> arguments) {
         flag = board.checkDiagonalWinning(flag);
       }
 
-      if (board.checkTie(flag)) {
+      if (board.checkTie()) {
         print('\n\u001b[33mO jogo empatou!');
         flag = false;
-        return;
       }
 
       if (flag) {
@@ -95,7 +94,7 @@ void main(List<String> arguments) {
     }
     game.end();
     stdout.write(
-        'Deseja jogar outra partida? (Digite 1 para Sim e 2 para Não): ');
+        '\u001b[37mDeseja jogar outra partida? (Digite 1 para Sim e 2 para Não): ');
     int restartInput = int.tryParse(stdin.readLineSync());
     game.restart(restartInput);
   }

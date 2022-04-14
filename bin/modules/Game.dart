@@ -83,9 +83,9 @@ class Game {
   bool quit() {
     print('');
     print(
-        '\u001b[37mJogador \u001b[32mX fez \u001b[37m${players[0].score} ponto(s)');
+        '\u001b[37mJogador \u001b[32mX \u001b[37mfez ${players[0].score} ponto(s)');
     print(
-        '\u001b[37mJogador \u001b[33mO fez \u001b[37m${players[1].score} ponto(s)');
+        '\u001b[37mJogador \u001b[33mO \u001b[37mfez ${players[1].score} ponto(s)');
     print('\u001b[37mO jogo foi encerrado!');
     return false;
   }
@@ -94,6 +94,10 @@ class Game {
     board.render(board.representation);
     if (playersValue[game.turn] == '\u001b[32mX' ||
         playersValue[game.turn] == '\u001b[33mO') {
+      if (board.checkTie()) {
+        print('\n\u001b[33mO jogo empatou!');
+        return;
+      }
       players[game.turn].score += 1;
       print(
           '\n\u001b[37mO jogador \u001b[32m${playersValue[game.turn]} \u001b[37mganhou!');
