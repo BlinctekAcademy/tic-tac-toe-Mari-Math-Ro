@@ -1,3 +1,5 @@
+import '../desafio_blinctek.dart';
+import 'dart:io';
 import 'Player.dart';
 
 class Board {
@@ -39,10 +41,36 @@ class Board {
     if (playerInput is! int) {
       return false;
     }
-    if ((playerInput < 1) | (playerInput > 9)) {
+    return (playerInput >= 1) & (playerInput <= 9);
+  }
+
+  bool validateRestartInput(playerInput) {
+    if (playerInput is! int) {
       return false;
     }
-    return true;
+    return (playerInput == 1) | (playerInput == 2);
+  }
+
+  void invalidInputHandler(isValid) {
+    if (isValid) return;
+    print('');
+    stdout.write('\u001b[31mEscolha um valor válido: ');
+    playerInputValue = int.tryParse(stdin.readLineSync());
+    isValid = board.validatePlayerInput(playerInputValue);
+
+    invalidInputHandler(isValid);
+  }
+
+  int invalidRestartInputHandler(isValid, [lastInput]) {
+    if (isValid) return lastInput;
+    print('');
+    stdout.write('\u001b[31mEscolha um valorr válido: ');
+    playerInputValue = int.tryParse(stdin.readLineSync());
+    isValid = board.validateRestartInput(playerInputValue);
+
+    invalidRestartInputHandler(isValid, playerInputValue);
+
+    return playerInputValue;
   }
 
   // Receives an 1 - 9 number as input and returns a board's coordinate
@@ -118,13 +146,13 @@ class Board {
         (this.representation[1][1] == this.representation[2][2])) {
       flag = false;
       return flag;
-    } else if ((this.representation[0][2] == this.representation[1][1]) &
+    }
+    if ((this.representation[0][2] == this.representation[1][1]) &
         (this.representation[1][1] == this.representation[2][0])) {
       flag = false;
       return flag;
-    } else {
-      return true;
     }
+    return true;
   }
 
   bool checkTie(flag) {
