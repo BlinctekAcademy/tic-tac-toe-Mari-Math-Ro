@@ -16,8 +16,8 @@ List<Player> players = [playerX, playerO];
 List<String> playersValue = [playerX.value, playerO.value];
 List chosenCoordinate = [];
 int playerInputValue;
-bool flag = true;
-bool flag2 = true;
+bool moveFlag = true;
+bool matchFlag = true;
 bool isAvailable = true;
 bool isValid = true;
 
@@ -34,14 +34,15 @@ void main(List<String> arguments) {
     game.mode = int.tryParse(stdin.readLineSync());
   }
 
-  while (flag2) {
-    while (flag) {
+  while (matchFlag) {
+    while (moveFlag) {
       game.start();
 
+      //fluid interface
+      print('\x1B[2J\x1B[0;0H');
       //Exit Game
       if (playerInputValue == 0) {
-        flag = game.quit();
-        flag2 = game.quit();
+        matchFlag = game.quit();
         return;
       }
 
@@ -68,30 +69,24 @@ void main(List<String> arguments) {
       board.writePlayersSymbolAtField(
           coordinate: chosenCoordinate, symbol: '${playersValue[game.turn]}');
 
-      if (flag) {
-        flag = board.checkHorizontalWinning(flag);
-      }
+      if (board.checkWin()) {
+        print(
+            '\n\u001b[37mO jogador \u001b[32m${playersValue[game.turn]} \u001b[37mganhou!');
 
-      if (flag) {
-        flag = board.checkVerticalWinning(flag);
-      }
-
-      if (flag) {
-        flag = board.checkDiagonalWinning(flag);
+        break;
       }
 
       if (board.checkTie()) {
-        print('\n\u001b[33mO jogo empatou!');
-        flag = false;
+        print('\x1B[33mO jogo empatou!');
+        break;
       }
 
-      if (flag) {
-        game.changeTurn();
-      }
+      game.changeTurn();
 
       //fluid interface
       print('\x1B[2J\x1B[0;0H');
     }
+
     game.end();
     stdout.write(
         '\u001b[37mDeseja jogar outra partida? (Digite 1 para Sim e 2 para Não): ');

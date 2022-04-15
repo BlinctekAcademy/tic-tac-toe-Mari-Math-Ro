@@ -64,7 +64,7 @@ class Board {
   int invalidRestartInputHandler(isValid, [lastInput]) {
     if (isValid) return lastInput;
     print('');
-    stdout.write('\u001b[31mEscolha um valorr válido: ');
+    stdout.write('\u001b[31mEscolha um valor válido: ');
     playerInputValue = int.tryParse(stdin.readLineSync());
     isValid = board.validateRestartInput(playerInputValue);
 
@@ -121,50 +121,56 @@ class Board {
   }
 
   //Checks if the player which is actually playing won after his turn
-  bool checkHorizontalWinning(flag) {
+  bool checkHorizontalWinning() {
     for (int i = 0; i < 3; i++) {
       if ((this.representation[i][0] == this.representation[i][1]) &
           (this.representation[i][1] == this.representation[i][2])) {
-        flag = false;
+        return true;
       }
     }
-    return flag;
+    return false;
   }
 
-  bool checkVerticalWinning(flag) {
+  bool checkVerticalWinning() {
     for (int i = 0; i < 3; i++) {
       if ((this.representation[0][i] == this.representation[1][i]) &
           (this.representation[1][i] == this.representation[2][i])) {
-        flag = false;
+        return true;
       }
     }
-    return flag;
+    return false;
   }
 
-  bool checkDiagonalWinning(flag) {
+  bool checkDiagonalWinning() {
     if ((this.representation[0][0] == this.representation[1][1]) &
         (this.representation[1][1] == this.representation[2][2])) {
-      flag = false;
-      return flag;
+      return true;
     }
     if ((this.representation[0][2] == this.representation[1][1]) &
         (this.representation[1][1] == this.representation[2][0])) {
-      flag = false;
-      return flag;
+      return true;
     }
-    return true;
+    return false;
   }
 
   bool checkTie() {
-    int countFreeHouses = 0;
+    int countFreeHouses = 9;
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 3; j++) {
-        if ((this.representation[i][j] != '\u001b[32mX') &
-            (this.representation[i][j] != '\u001b[33mO')) {
-          countFreeHouses += 1;
+        if ((this.representation[i][j] == '\u001b[32mX') |
+            (this.representation[i][j] == '\u001b[33mO')) {
+          countFreeHouses -= 1;
         }
       }
     }
     return (countFreeHouses == 0);
+  }
+
+  bool checkWin() {
+    if (this.checkDiagonalWinning()) return true;
+    if (this.checkHorizontalWinning()) return true;
+    if (this.checkVerticalWinning()) return true;
+
+    return false;
   }
 }

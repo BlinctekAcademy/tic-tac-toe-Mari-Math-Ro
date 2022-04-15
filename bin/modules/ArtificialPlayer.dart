@@ -6,4 +6,6 @@ class ArtificialPlayer extends Player {
   ArtificialPlayer(String _value, int _score) : super(_value, _score);
 
   calculate(List<List<String>> board) {}
+
+  minimax() {}
 }

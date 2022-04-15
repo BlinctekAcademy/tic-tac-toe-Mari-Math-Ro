@@ -1,4 +1,9 @@
-A simple command-line application.
+# To test the application, you need to follow the steps bellow:
 
-Created from templates made available by Stagehand under a BSD-style
-[license](https://github.com/dart-lang/stagehand/blob/master/LICENSE).
+### 1º Download the folder's project.
+
+### 2º Open the respective directory in the terminal.
+
+### 3º Run the command 'dart run'
+
+### 4º Have fun!

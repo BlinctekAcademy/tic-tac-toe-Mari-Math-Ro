@@ -62,8 +62,8 @@ class Game {
     input = board.invalidRestartInputHandler(
         board.validateRestartInput(input), input);
     if (input == 1) {
-      flag = true;
-      flag2 = true;
+      moveFlag = true;
+      matchFlag = true;
       board.representation = [
         ['1', '2', '3'],
         ['4', '5', '6'],
@@ -72,12 +72,9 @@ class Game {
       if (playersValue[game.turn] == '\u001b[33mO') {
         this.changeTurn();
       }
-      ;
     } else if (input == 2) {
-      flag2 = quit();
+      matchFlag = quit();
     }
-
-    //playerInput == 1 ? flag = true : game.quit();
   }
 
   bool quit() {
@@ -94,13 +91,8 @@ class Game {
     board.render(board.representation);
     if (playersValue[game.turn] == '\u001b[32mX' ||
         playersValue[game.turn] == '\u001b[33mO') {
-      if (board.checkTie()) {
-        print('\n\u001b[33mO jogo empatou!');
-        return;
-      }
       players[game.turn].score += 1;
-      print(
-          '\n\u001b[37mO jogador \u001b[32m${playersValue[game.turn]} \u001b[37mganhou!');
+
       return;
     }
   }

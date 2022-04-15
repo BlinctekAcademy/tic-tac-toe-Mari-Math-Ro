@@ -8,7 +8,7 @@ class Player {
     return _value;
   }
 
-  set value(value) {
+  set value(String value) {
     _value = value;
   }
 
@@ -16,7 +16,7 @@ class Player {
     return _score;
   }
 
-  set score(score) {
+  set score(int score) {
     _score = score;
   }
 }
