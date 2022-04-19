@@ -36,7 +36,6 @@ class Board {
     print('');
   }
 
-  //Checks if the player's input is valid
   bool validatePlayerInput(playerInput) {
     if (playerInput is! int) {
       return false;
@@ -53,20 +52,22 @@ class Board {
 
   void invalidInputHandler(isValid) {
     if (isValid) return;
+    this.render(this.representation);
     print('');
     stdout.write('\u001b[31mEscolha um valor válido: ');
     playerInputValue = int.tryParse(stdin.readLineSync());
-    isValid = board.validatePlayerInput(playerInputValue);
+    isValid = this.validatePlayerInput(playerInputValue);
 
     invalidInputHandler(isValid);
   }
 
   int invalidRestartInputHandler(isValid, [lastInput]) {
     if (isValid) return lastInput;
+    this.render(this.representation);
     print('');
     stdout.write('\u001b[31mEscolha um valor válido: ');
     playerInputValue = int.tryParse(stdin.readLineSync());
-    isValid = board.validateRestartInput(playerInputValue);
+    isValid = this.validateRestartInput(playerInputValue);
 
     invalidRestartInputHandler(isValid, playerInputValue);
 
@@ -154,16 +155,16 @@ class Board {
   }
 
   bool checkTie() {
-    int countFreeHouses = 9;
+    int freeHouses = 9;
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 3; j++) {
         if ((this.representation[i][j] == '\u001b[32mX') |
             (this.representation[i][j] == '\u001b[33mO')) {
-          countFreeHouses -= 1;
+          freeHouses -= 1;
         }
       }
     }
-    return (countFreeHouses == 0);
+    return (freeHouses == 0);
   }
 
   bool checkWin() {

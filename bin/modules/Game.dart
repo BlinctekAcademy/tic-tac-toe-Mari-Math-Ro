@@ -5,10 +5,35 @@ import 'HumanPlayer.dart' show HumanPlayer;
 import 'ArtificialPlayer.dart' show ArtificialPlayer;
 
 class Game {
-  HumanPlayer playerX = HumanPlayer('\u001b[32mX', 0);
+  HumanPlayer humanPlayer = HumanPlayer('\u001b[32mX', 0);
+  ArtificialPlayer _artificialPlayer = ArtificialPlayer('\u001b[33mO', 0);
   Board board = Board();
-  int turn = 0;
-  int mode; //vs human or vs AI
+  int _turn = 0;
+  int _mode;
+
+  ArtificialPlayer get artificialPlayer {
+    return this._artificialPlayer;
+  }
+
+  set artificialPlayer(ArtificialPlayer artificialPlayer) {
+    this._artificialPlayer = artificialPlayer;
+  }
+
+  int get turn {
+    return this._turn;
+  }
+
+  set turn(int turn) {
+    this._turn = turn;
+  }
+
+  int get mode {
+    return this._mode;
+  }
+
+  set mode(int mode) {
+    this._mode = mode;
+  }
 
   Game();
 
@@ -21,7 +46,6 @@ class Game {
         'Você deseja jogar contra um amigo ou a CPU? (Digite 1 para amigo e 2 para CPU): ');
     this.mode = int.tryParse(stdin.readLineSync());
     isModeValid();
-    //return this.mode;
   }
 
   bool isModeValid() {
@@ -31,33 +55,18 @@ class Game {
   void start() {
     this.board.render(board.representation);
     if (this.mode == 1) {
-      this.playWithHuman();
+      this.humanPlayer.play();
     } else if (this.mode == 2) {
-      this.playWithAI();
+      this.artificialPlayer.play();
     }
 
     isValid = board.validatePlayerInput(playerInputValue);
-  }
-
-  void playWithHuman() {
-    HumanPlayer playerO = HumanPlayer('\u001b[33mO', 0);
-    stdout.write(
-        '\u001b[37mJogador ${playersValue[game.turn]}\u001b[37m, faça sua jogada (Pressione 0 para fechar o jogo): ');
-    playerInputValue = int.tryParse(stdin.readLineSync());
-  }
-
-  void playWithAI() {
-    ArtificialPlayer playerO = ArtificialPlayer('\u001b[33mO', 0);
-    stdout.write(
-        '\u001b[37mJogador X\u001b[37m, faça sua jogada (Pressione 0 para fechar o jogo): ');
-    int playerXFieldInput = int.tryParse(stdin.readLineSync());
   }
 
   void changeTurn() {
     turn = turn == 1 ? 0 : 1;
   }
 
-//receber o valor do input de restart, if == 1, chame start(), if == 2, chame quit()
   void restart(input) {
     input = board.invalidRestartInputHandler(
         board.validateRestartInput(input), input);
@@ -88,6 +97,7 @@ class Game {
   }
 
   void end() {
+    if (board.checkTie()) return;
     board.render(board.representation);
     if (playersValue[game.turn] == '\u001b[32mX' ||
         playersValue[game.turn] == '\u001b[33mO') {
