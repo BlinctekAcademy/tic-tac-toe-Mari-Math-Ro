@@ -1,13 +1,20 @@
 import '../desafio_blinctek.dart';
 import 'dart:io';
-import 'Player.dart';
 
 class Board {
-  List<List<String>> representation = [
+  List<List<String>> _representation = [
     ['1', '2', '3'],
     ['4', '5', '6'],
     ['7', '8', '9'],
   ];
+
+  List<List<String>> get representation {
+    return this._representation;
+  }
+
+  set representation(List<List<String>> representation) {
+    this._representation = representation;
+  }
 
   Board();
 
@@ -21,13 +28,13 @@ class Board {
     return true;
   }
 
-  void render(List board) {
+  void render() {
     int lineCount = 0;
     print('');
     for (int i = 0; i < 5; i++) {
       if ((i + 1) % 2 != 0) {
         print(
-            '\u001b[36m ${board[lineCount][0]} \u001b[31m|\u001b[36m ${board[lineCount][1]} \u001b[31m|\u001b[36m ${board[lineCount][2]} ');
+            '\u001b[36m ${this._representation[lineCount][0]} \u001b[31m|\u001b[36m ${this._representation[lineCount][1]} \u001b[31m|\u001b[36m ${this._representation[lineCount][2]} ');
         lineCount += 1;
       } else {
         print('\u001b[31m---|---|---');
@@ -52,26 +59,26 @@ class Board {
 
   void invalidInputHandler(isValid) {
     if (isValid) return;
-    this.render(this.representation);
+    this.render();
     print('');
     stdout.write('\u001b[31mEscolha um valor válido: ');
-    playerInputValue = int.tryParse(stdin.readLineSync());
-    isValid = this.validatePlayerInput(playerInputValue);
+    game.playerInputValue = int.tryParse(stdin.readLineSync());
+    isValid = this.validatePlayerInput(game.playerInputValue);
 
     invalidInputHandler(isValid);
   }
 
   int invalidRestartInputHandler(isValid, [lastInput]) {
     if (isValid) return lastInput;
-    this.render(this.representation);
+    this.render();
     print('');
     stdout.write('\u001b[31mEscolha um valor válido: ');
-    playerInputValue = int.tryParse(stdin.readLineSync());
-    isValid = this.validateRestartInput(playerInputValue);
+    game.playerInputValue = int.tryParse(stdin.readLineSync());
+    isValid = this.validateRestartInput(game.playerInputValue);
 
-    invalidRestartInputHandler(isValid, playerInputValue);
+    invalidRestartInputHandler(isValid, game.playerInputValue);
 
-    return playerInputValue;
+    return game.playerInputValue;
   }
 
   // Receives an 1 - 9 number as input and returns a board's coordinate
@@ -110,22 +117,21 @@ class Board {
 
   //Checks if the selected coordinate is actually available
   bool isFieldAvailable(List coordinate) {
-    return !(this.representation[coordinate[0]][coordinate[1]] ==
+    return !(this._representation[coordinate[0]][coordinate[1]] ==
             '\u001b[32mX' ||
-        this.representation[coordinate[0]][coordinate[1]] == '\u001b[33mO');
+        this._representation[coordinate[0]][coordinate[1]] == '\u001b[33mO');
   }
 
   //Writes the player's symbol on the chose board's coordinate
-  List<List> writePlayersSymbolAtField({List coordinate, String symbol}) {
-    this.representation[coordinate[0]][coordinate[1]] = symbol;
-    return this.representation;
+  void writePlayersSymbolAtField({List coordinate, String symbol}) {
+    this._representation[coordinate[0]][coordinate[1]] = symbol;
   }
 
   //Checks if the player which is actually playing won after his turn
   bool checkHorizontalWinning() {
     for (int i = 0; i < 3; i++) {
-      if ((this.representation[i][0] == this.representation[i][1]) &
-          (this.representation[i][1] == this.representation[i][2])) {
+      if ((this._representation[i][0] == this._representation[i][1]) &
+          (this._representation[i][1] == this._representation[i][2])) {
         return true;
       }
     }
@@ -134,8 +140,8 @@ class Board {
 
   bool checkVerticalWinning() {
     for (int i = 0; i < 3; i++) {
-      if ((this.representation[0][i] == this.representation[1][i]) &
-          (this.representation[1][i] == this.representation[2][i])) {
+      if ((this._representation[0][i] == this._representation[1][i]) &
+          (this._representation[1][i] == this._representation[2][i])) {
         return true;
       }
     }
@@ -143,12 +149,12 @@ class Board {
   }
 
   bool checkDiagonalWinning() {
-    if ((this.representation[0][0] == this.representation[1][1]) &
-        (this.representation[1][1] == this.representation[2][2])) {
+    if ((this._representation[0][0] == this._representation[1][1]) &
+        (this._representation[1][1] == this._representation[2][2])) {
       return true;
     }
-    if ((this.representation[0][2] == this.representation[1][1]) &
-        (this.representation[1][1] == this.representation[2][0])) {
+    if ((this._representation[0][2] == this._representation[1][1]) &
+        (this._representation[1][1] == this._representation[2][0])) {
       return true;
     }
     return false;
@@ -158,8 +164,8 @@ class Board {
     int freeHouses = 9;
     for (int i = 0; i < 3; i++) {
       for (int j = 0; j < 3; j++) {
-        if ((this.representation[i][j] == '\u001b[32mX') |
-            (this.representation[i][j] == '\u001b[33mO')) {
+        if ((this._representation[i][j] == '\u001b[32mX') |
+            (this._representation[i][j] == '\u001b[33mO')) {
           freeHouses -= 1;
         }
       }
